@@ -17,49 +17,50 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   List<String> _cycleTypes = ['Daily', 'Weekly', 'Monthly'];
 
-  //  void _createGroup() async {
-  //   if (_cycleType == null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Please select a Cycle Type')),
-  //     );
-  //     return;
-  //   }
+  void _createGroup() async {
+    if (_cycleType == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please select a Cycle Type')));
+      return;
+    }
 
-  //   // Attempt to parse the contribution amount
-  //   // final contributionAmount = double.tryParse(_contributionAmountController.text);
-  //   // if (contributionAmount == null) {
-  //   //   ScaffoldMessenger.of(context).showSnackBar(
-  //   //     SnackBar(content: Text('Please enter a valid Contribution Amount')),
-  //   //   );
-  //   //   return;
-  //   // }
+    // Attempt to parse the contribution amount
+    // final contributionAmount = double.tryParse(_contributionAmountController.text);
+    // if (contributionAmount == null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('Please enter a valid Contribution Amount')),
+    //   );
+    //   return;
+    // }
 
-  //   try {
+    try {
+      final response = await GroupService.createGroup(
+        _groupNameController.text,
+        _cycleType!, // Use the non-nullable _cycleType
+        _contributionAmountController.text,
+        _groupDescriptionController.text,
+      );
+      //print('Cycle Type : $response');
 
-  //     final response = await GroupService.createGroup(
-  //       _groupNameController.text,
-  //       _cycleType!, // Use the non-nullable _cycleType
-  //       _contributionAmountController.text,
-  //       _groupDescriptionController.text,
-  //     );
-  //       print('Cycle Type : $response');
+      if (response.statusCode == 201) {
+        // Assuming a successful creation returns 201 (Created)
+        print('Group created successfully');
+        Navigator.pushNamed(context, AppRoutes.new_overview);
+      } else {
+        print('Failed to create group. Status code: ${response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create group. Please try again.')),
+        );
+      }
+    } catch (e) {
+      print('Error during group creation: $e');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('An unexpected error occurred.')));
+    }
+  }
 
-  //     if (response.statusCode == 201) { // Assuming a successful creation returns 201 (Created)
-  //       print('Group created successfully');
-  //       Navigator.pushNamed(context, AppRoutes.new_overview);
-  //     } else {
-  //       print('Failed to create group. Status code: ${response.statusCode}');
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Failed to create group. Please try again.')),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print('Error during group creation: $e');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('An unexpected error occurred.')),
-  //     );
-  //   }
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,10 +70,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          'Create Group',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('Create Group', style: TextStyle(color: Colors.white)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -109,12 +107,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 contentPadding: EdgeInsets.all(12.0),
               ),
               value: _cycleType,
-              items: _cycleTypes.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+              items:
+                  _cycleTypes.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
                   _cycleType = newValue;
@@ -157,12 +156,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             ),
             SizedBox(height: 24.0),
             ElevatedButton(
-              onPressed: () => {
-                Navigator.pushNamed(context, AppRoutes.new_dashboard)
-              },
-               //create group logic
-                //print('Create Group pressed');
-                //Navigator.pushNamed(context, AppRoutes.dashboard);,
+              onPressed: _createGroup,
+              //Navigator.pushNamed(context, AppRoutes.new_dashboard)
+
+              //create group logic
+              //print('Create Group pressed');
+              //Navigator.pushNamed(context, AppRoutes.dashboard);,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1B5E20),
                 padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -186,10 +185,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 Expanded(child: Divider(thickness: 1.0)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    'OR',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
+                  child: Text('OR', style: TextStyle(color: Colors.grey[600])),
                 ),
                 Expanded(child: Divider(thickness: 1.0)),
               ],
@@ -197,7 +193,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             SizedBox(height: 16.0),
             OutlinedButton(
               onPressed: () {
-             
                 Navigator.pushNamed(context, AppRoutes.joinGroup);
               },
               style: OutlinedButton.styleFrom(

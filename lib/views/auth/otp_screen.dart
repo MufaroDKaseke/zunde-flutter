@@ -13,33 +13,47 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  List<TextEditingController> _otpControllers =
-      List.generate(6, (index) => TextEditingController());
+  List<TextEditingController> _otpControllers = List.generate(
+    6,
+    (index) => TextEditingController(),
+  );
   List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
 
-  // String _otpCode = "";
+  String _otpCode = "";
 
-  // void _verifyOtp() async {
-  //   _otpCode = _otpControllers.map((controller) => controller.text).join();
+  void _verifyOtp() async {
+    _otpCode = _otpControllers.map((controller) => controller.text).join();
 
-  //   final response = await AuthService.verifyOTP(_otpCode, widget.phoneNumber);
-  //   if (response.statusCode == 200) {
-  //      //otp to the server verification
-  //     print("OTP Verified for ${widget.phoneNumber}");
-  //     Navigator.pushReplacementNamed(context, AppRoutes.createGroup);
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Invalid OTP")),
-  //     );
-  //   }
-  // }
+    final response = await AuthService.verifyOTP(_otpCode, widget.phoneNumber);
+    if (response.statusCode == 200) {
+      //otp to the server verification
+      print("OTP Verified for ${widget.phoneNumber}");
+      Navigator.pushReplacementNamed(context, AppRoutes.createGroup);
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Invalid OTP")));
+    }
+  }
 
-  void _resendOtp() {
-   //otp logic//
-    print("Resend OTP pressed for ${widget.phoneNumber}");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("OTP resent to ${widget.phoneNumber}")),
-    );
+  void _resendOtp() async {
+    //otp logic//
+    final response = await AuthService.sendOtp(widget.phoneNumber);
+    if (response.statusCode == 201) {
+      //otp to the server verification
+      print("OTP Resend for ${widget.phoneNumber}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("OTP has been resend to ${widget.phoneNumber}")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error resending otp. Try another number")),
+      );
+    }
+    // print("Resend OTP pressed for ${widget.phoneNumber}");
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(content: Text("OTP resent to ${widget.phoneNumber}")),
+    // );
   }
 
   void _goBack() {
@@ -73,10 +87,7 @@ class _OtpScreenState extends State<OtpScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: _goBack,
         ),
-        title: Text(
-          "OTP Verification",
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text("OTP Verification", style: TextStyle(color: Colors.white)),
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -84,8 +95,10 @@ class _OtpScreenState extends State<OtpScreen> {
             padding: const EdgeInsets.all(24.0),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight -
-                      (AppBar().preferredSize.height + 48)),
+                minHeight:
+                    constraints.maxHeight -
+                    (AppBar().preferredSize.height + 48),
+              ),
               child: IntrinsicHeight(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -138,20 +151,23 @@ class _OtpScreenState extends State<OtpScreen> {
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
-                                borderSide:
-                                    BorderSide(color: Colors.grey[400]!),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[400]!,
+                                ),
                               ),
                               counterText: "",
                             ),
                             onChanged: (value) {
                               if (value.isNotEmpty) {
                                 if (index < 5) {
-                                  FocusScope.of(context)
-                                      .requestFocus(_focusNodes[index + 1]);
+                                  FocusScope.of(
+                                    context,
+                                  ).requestFocus(_focusNodes[index + 1]);
                                 }
                               } else if (index > 0) {
-                                FocusScope.of(context)
-                                    .requestFocus(_focusNodes[index - 1]);
+                                FocusScope.of(
+                                  context,
+                                ).requestFocus(_focusNodes[index - 1]);
                               }
                             },
                           ),
@@ -160,7 +176,11 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                     SizedBox(height: 24.0),
                     ElevatedButton(
-                      onPressed:() => Navigator.pushNamed(context, AppRoutes.createGroup),
+                      onPressed:
+                          () => {
+                            _verifyOtp(),
+                            //Navigator.pushNamed(context, AppRoutes.createGroup),
+                          },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1B5E20),
                         padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -180,8 +200,10 @@ class _OtpScreenState extends State<OtpScreen> {
                     SizedBox(height: 24.0),
                     Text(
                       "Didn't receive the OTP?",
-                      style:
-                          TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     SizedBox(height: 8.0),
                     Padding(
@@ -189,21 +211,26 @@ class _OtpScreenState extends State<OtpScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text("- Check your SMS inbox and spam folder.",
-                              style: TextStyle(fontSize: 14.0)),
+                          Text(
+                            "- Check your SMS inbox and spam folder.",
+                            style: TextStyle(fontSize: 14.0),
+                          ),
                           SizedBox(height: 4.0),
                           Text(
-                              "- Tap the \"Resend OTP\" button below. Please wait a few moments before requesting a new code.",
-                              style: TextStyle(fontSize: 14.0)),
+                            "- Tap the \"Resend OTP\" button below. Please wait a few moments before requesting a new code.",
+                            style: TextStyle(fontSize: 14.0),
+                          ),
                         ],
                       ),
                     ),
                     SizedBox(height: 16.0),
                     OutlinedButton(
-                      onPressed: () => Navigator.pushNamed(context, AppRoutes.login),
+                      onPressed:
+                          () => Navigator.pushNamed(context, AppRoutes.login),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
-                            color: const Color.fromARGB(255, 21, 87, 31)),
+                          color: const Color.fromARGB(255, 21, 87, 31),
+                        ),
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -235,13 +262,18 @@ class _OtpScreenState extends State<OtpScreen> {
                     Spacer(),
                     Row(
                       children: <Widget>[
-                        Icon(Icons.info_outline,
-                            color: Colors.grey[600], size: 16.0),
+                        Icon(
+                          Icons.info_outline,
+                          color: Colors.grey[600],
+                          size: 16.0,
+                        ),
                         SizedBox(width: 4.0),
                         Text(
                           "This OTP will expire in 10 minutes",
-                          style:
-                              TextStyle(fontSize: 12.0, color: Colors.grey[600]),
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.grey[600],
+                          ),
                         ),
                       ],
                     ),

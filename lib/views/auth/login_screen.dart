@@ -1,12 +1,39 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
-//import '../../core/constants/colors.dart'; // 
+import '../auth/otp_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+//import '../../core/constants/colors.dart'; //
+import "../../services/auth_services.dart";
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _phoneController = TextEditingController();
+
+  void _login() async {
+    final response = await AuthService.sendOtp(_phoneController.text);
+
+    if (response.statusCode == 201) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OtpScreen(phoneNumber: _phoneController.text),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Sending OTP failed. Please try again!")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1B5E20), // 
+      backgroundColor: const Color(0xFF1B5E20), //
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -33,26 +60,17 @@ class LoginScreen extends StatelessWidget {
                 Text(
                   'Let\'s get you back into your account!',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.grey[700],
-                  ),
+                  style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),
                 ),
                 SizedBox(height: 24.0),
                 Text(
                   'To log in, simply type in your phone number in the box below. Make sure you include your country code (for example, +263 for Zimbabwe).',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14.0, color: Colors.grey[600]),
                 ),
                 SizedBox(height: 16.0),
                 Text(
                   'On the next screen, you\'ll enter that code to confirm it\'s you and access your account.',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14.0, color: Colors.grey[600]),
                 ),
                 SizedBox(height: 24.0),
                 Text(
@@ -65,6 +83,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 TextField(
+                  controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     hintText: 'e.g., +263 7XXXXXXXXX',
@@ -74,7 +93,10 @@ class LoginScreen extends StatelessWidget {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(color: const Color(0xFF1B5E20), width: 2.0),
+                      borderSide: BorderSide(
+                        color: const Color(0xFF1B5E20),
+                        width: 2.0,
+                      ),
                     ),
                     contentPadding: EdgeInsets.all(16.0),
                   ),
@@ -84,9 +106,8 @@ class LoginScreen extends StatelessWidget {
                   onPressed: () {
                     //logic
                     print('Request OTP');
-                    
-                    Navigator.pushNamed(context, AppRoutes.otpVerification,
-                    );
+                    _login();
+                    //Navigator.pushNamed(context, AppRoutes.otpVerification);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1B5E20),
@@ -114,7 +135,6 @@ class LoginScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                       
                         print('Support');
                       },
                       child: Text(
@@ -136,11 +156,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-
-                       
                         print('Sign Up');
-                          Navigator.pushNamed(context, AppRoutes.signup,
-                    );
+                        Navigator.pushNamed(context, AppRoutes.signup);
                       },
                       child: Text(
                         'Sign Up',
@@ -156,10 +173,7 @@ class LoginScreen extends StatelessWidget {
                 Text(
                   'By continuing, you agree to our Terms and Conditions and Privacy Policy.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.grey[500],
-                  ),
+                  style: TextStyle(fontSize: 12.0, color: Colors.grey[500]),
                 ),
               ],
             ),

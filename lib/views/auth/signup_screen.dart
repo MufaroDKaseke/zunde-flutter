@@ -18,30 +18,30 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _address = TextEditingController();
   final TextEditingController _language = TextEditingController();
 
-  // void _submit() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     final response = await AuthService.registerUser(
-  //       _nameController.text,
-  //       _address.text,
-  //       _language.text,
-  //       _idNumberController.text,
-  //       _phoneController.text,
-  //     );
+  void _submit() async {
+    if (_formKey.currentState!.validate()) {
+      final response = await AuthService.registerUser(
+        _nameController.text,
+        _address.text,
+        _language.text,
+        _idNumberController.text,
+        _phoneController.text,
+      );
 
-  //     if (response.statusCode == 201) {
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => OtpScreen(phoneNumber: _phoneController.text),
-  //         ),
-  //       );
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Signup failed. Please try again.")),
-  //       );
-  //     }
-  //   }
-  // }
+      if (response.statusCode == 201) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OtpScreen(phoneNumber: _phoneController.text),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Signup failed. Please try again.")),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +80,13 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 32),
               Center(
                 child: ElevatedButton(
-                  onPressed: () => {
-                    Navigator.pushNamed(context, AppRoutes.otpVerification)
-                  },
+                  onPressed: _submit,
+                  // Navigator.pushNamed(context, AppRoutes.otpVerification)
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 14.0,
+                    ),
                     child: Text(
                       "Submit",
                       style: TextStyle(
@@ -101,7 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -109,7 +111,11 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildInputField(String label, TextEditingController controller, {bool isPhone = false}) {
+  Widget _buildInputField(
+    String label,
+    TextEditingController controller, {
+    bool isPhone = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
@@ -119,9 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
           labelText: label,
           filled: true,
           fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
         ),
         validator: (value) => value!.isEmpty ? "Enter your $label" : null,
       ),
