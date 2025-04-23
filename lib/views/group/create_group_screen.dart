@@ -46,7 +46,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       if (response.statusCode == 201) {
         // Assuming a successful creation returns 201 (Created)
         print('Group created successfully');
-        Navigator.pushNamed(context, AppRoutes.new_overview);
+        Navigator.pushNamed(context, AppRoutes.new_dashboard);
       } else {
         print('Failed to create group. Status code: ${response.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(

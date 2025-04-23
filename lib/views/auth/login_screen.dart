@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
 import '../auth/otp_screen.dart';
-
-//import '../../core/constants/colors.dart'; //
+import '../../core/constants/colors.dart'; //
 import "../../services/auth_services.dart";
 
 class LoginScreen extends StatefulWidget {
@@ -17,6 +16,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final response = await AuthService.sendOtp(_phoneController.text);
 
     if (response.statusCode == 201) {
+      // Check if user is in a group and if he is then go straight to dashboard
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1B5E20), //
+      backgroundColor: zbGreen, //
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -53,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1B5E20),
+                    color: zbGreen,
                   ),
                 ),
                 SizedBox(height: 16.0),
@@ -93,10 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: const Color(0xFF1B5E20),
-                        width: 2.0,
-                      ),
+                      borderSide: BorderSide(color: zbGreen, width: 2.0),
                     ),
                     contentPadding: EdgeInsets.all(16.0),
                   ),
@@ -110,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     //Navigator.pushNamed(context, AppRoutes.otpVerification);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1B5E20),
+                    backgroundColor: zbGreen,
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -140,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Support',
                         style: TextStyle(
-                          color: const Color(0xFF1B5E20),
+                          color: zbGreen,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -151,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'New to Mkando? ',
+                      'New to the app? ',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                     TextButton(
@@ -162,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Sign Up',
                         style: TextStyle(
-                          color: const Color(0xFF1B5E20),
+                          color: zbGreen,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

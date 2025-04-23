@@ -46,7 +46,7 @@ class ContributionScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 8.0),
                   Text(
-                    '\$10',
+                    '\$20',
                     style: TextStyle(
                       fontSize: 30.0,
                       fontWeight: FontWeight.w700,
@@ -61,23 +61,24 @@ class ContributionScreen extends StatelessWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text('Confirm Payment'),
-                    content: Text('Have you made the payment of \$10?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text('Cancel'),
+                  builder:
+                      (context) => AlertDialog(
+                        title: Text('Confirm Payment'),
+                        content: Text('Have you made the payment of \$10?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('Cancel'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: Text('Yes, I Paid'),
+                          ),
+                        ],
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        child: Text('Yes, I Paid'),
-                      ),
-                    ],
-                  ),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -122,7 +123,7 @@ class ContributionScreen extends StatelessWidget {
               'Please ensure you have made the contribution through your bank or mobile money.  Click "I Paid" to confirm.',
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               textAlign: TextAlign.center,
-            )
+            ),
           ],
         ),
       ),

@@ -32,4 +32,12 @@ class GroupService {
     );
     return response;
   }
+
+  static Future<http.Response> userGroup() async {
+    final response = await HttpClientWithCookies.client.get(
+      Uri.parse('$baseUrl/group/my'),
+      headers: HttpClientWithCookies.headers,
+    );
+    return response;
+  }
 }

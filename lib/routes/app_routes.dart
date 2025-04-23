@@ -19,6 +19,10 @@ import '../views/payments/ecocash.dart';
 import '../views/dashboard/new_group_dashboard.dart';
 import '../views/dashboard/overview_new.dart';
 import '../views/chatbot/chatbot.dart';
+import '../group_settings/change_contribution.dart';
+import '../group_settings/change_cycle_type.dart';
+import '../group_settings/edit_group_name.dart';
+import '../group_settings/share_invite_link.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -30,19 +34,22 @@ class AppRoutes {
   static const String contribution = '/contribution';
   static const String notifications = '/notifications';
   static const String tips = '/tips';
-   static const String otpVerification = '/otpVerification';
-    static const String signup = '/signup';
-    static const String payment ='/payment';
-    static const String ecocash ='/ecocash';
-    static const String bankcard ='/bankcard';
-    static const String mastercard ='/mastercard';
-    static const String visa ='/visa';
-    static const String onemoney ='/onemoney';
-    static const String qr ='/qr';
-    static const String new_dashboard ='/new_dashboard';
-    static const String new_overview ='/new_overview';
-    static const String chatbot ='/chatbot';
-    
+  static const String otpVerification = '/otpVerification';
+  static const String signup = '/signup';
+  static const String payment = '/payment';
+  static const String ecocash = '/ecocash';
+  static const String bankcard = '/bankcard';
+  static const String mastercard = '/mastercard';
+  static const String visa = '/visa';
+  static const String onemoney = '/onemoney';
+  static const String qr = '/qr';
+  static const String new_dashboard = '/new_dashboard';
+  static const String new_overview = '/new_overview';
+  static const String chatbot = '/chatbot';
+  static const String change_contribution = '/changecontribution';
+  static const String change_cycle_type = '/change_cycle_type';
+  static const String edit_group_name = '/edit_group_name';
+  static const String share_invite_link = '/share_link';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -57,11 +64,11 @@ class AppRoutes {
       case joinGroup:
         return MaterialPageRoute(builder: (_) => JoinGroupScreen());
       case dashboard:
-        return MaterialPageRoute(builder: (_) => GroupDashboard());
+        return MaterialPageRoute(builder: (_) => GroupDashboard(groupId: ''));
       case contribution:
         return MaterialPageRoute(builder: (_) => ContributionScreen());
-         case otpVerification:
-        return MaterialPageRoute(builder: (_) => (OtpScreen(phoneNumber: '',)));
+      case otpVerification:
+        return MaterialPageRoute(builder: (_) => (OtpScreen(phoneNumber: '')));
       case notifications:
         return MaterialPageRoute(builder: (_) => NotificationScreen());
       case signup:
@@ -84,14 +91,29 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => PaymentScreen());
       case new_overview:
         return MaterialPageRoute(builder: (_) => NewOverviewScreen());
+
+      case change_contribution:
+        return MaterialPageRoute(
+          builder: (_) => ChangeContributionAmountScreen(),
+        );
       case chatbot:
         return MaterialPageRoute(builder: (_) => Chatbot());
-        
+      case change_cycle_type:
+        return MaterialPageRoute(builder: (_) => ChangeCycleTypeScreen());
+      case edit_group_name:
+        return MaterialPageRoute(
+          builder:
+              (_) => EditGroupNameScreen(currentGroupName: 'Zunde Dev Team'),
+        );
+      case share_invite_link:
+        return MaterialPageRoute(
+          builder:
+              (_) => ShareGroupInviteLinkScreen(groupName: 'Zunde Dev Team'),
+        );
+
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(child: Text('Page not found')),
-          ),
+          builder: (_) => Scaffold(body: Center(child: Text('Page not found'))),
         );
     }
   }

@@ -1,3 +1,3 @@
 import 'package:flutter/material.dart';
 
-const zbGreen = Color(0xFF006E2E);
+const zbGreen = Color.fromARGB(255, 46, 125, 50);

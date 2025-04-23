@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mukando_app/core/constants/colors.dart';
 import '../dashboard/history_tab.dart';
 import '../dashboard/members_tab.dart';
 import '../dashboard/overview_tab.dart';
 import '../dashboard/settings_tab.dart';
 import '../../routes/app_routes.dart';
+import '../../services/group_service.dart';
 
 class GroupDashboard extends StatefulWidget {
+  final String groupId;
+  const GroupDashboard({required this.groupId});
+
   @override
   _GroupDashboardState createState() => _GroupDashboardState();
 }
@@ -23,7 +28,7 @@ class _GroupDashboardState extends State<GroupDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1B5E20),
+        backgroundColor: zbGreen,
         title: const Text(
           'Group Dashboard',
           style: TextStyle(color: Colors.white),
@@ -35,47 +40,46 @@ class _GroupDashboardState extends State<GroupDashboard> {
             onPressed: () {
               _showLogoutDialog(context); // Extract dialog to a method
             },
-          )
+          ),
         ],
       ),
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(
         // Add FAB
         onPressed: () => Navigator.pushNamed(context, AppRoutes.chatbot),
-        backgroundColor: const Color(0xFF1B5E20),
+        backgroundColor: zbGreen,
         foregroundColor: Colors.white,
         tooltip: 'Add Contribution', // Add a tooltip for accessibility
         child: const Icon(Icons.chat_bubble_outline),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation
-          .endFloat, // Position at the bottom right
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.endFloat, // Position at the bottom right
       bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
-  
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Logout'),
-        content: const Text('Are you sure you want to log out?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirm Logout'),
+            content: const Text('Are you sure you want to log out?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: zbGreen),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                },
+                child: const Text('Logout'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 14, 137, 76)),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -98,7 +102,7 @@ class _GroupDashboardState extends State<GroupDashboard> {
   //           ),
   //            const SizedBox(height: 12),
   //           // Add a date picker
-            
+
   //         ],
   //       ),
   //       actions: [
@@ -168,7 +172,7 @@ class _GroupDashboardState extends State<GroupDashboard> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFF1B5E20),
+        selectedItemColor: zbGreen,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
         showUnselectedLabels: true,

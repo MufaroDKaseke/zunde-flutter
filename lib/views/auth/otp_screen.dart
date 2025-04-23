@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import '../../routes/app_routes.dart';
-//import '../../core/constants/colors.dart';
+import '../../core/constants/colors.dart';
 import '../../services/auth_services.dart';
+import '../../services/group_service.dart';
+import '../dashboard/group_dashboard.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
@@ -27,8 +30,23 @@ class _OtpScreenState extends State<OtpScreen> {
     final response = await AuthService.verifyOTP(_otpCode, widget.phoneNumber);
     if (response.statusCode == 200) {
       //otp to the server verification
-      print("OTP Verified for ${widget.phoneNumber}");
-      Navigator.pushReplacementNamed(context, AppRoutes.createGroup);
+
+      // If you are in a group then go directly to dashboard if not then got to group create
+      final response2 = await GroupService.userGroup();
+
+      if (response2.statusCode == 200) {
+        final responseData = jsonDecode(response2.body);
+        final String groupId = responseData['id'];
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GroupDashboard(groupId: groupId),
+          ),
+        );
+      } else {
+        print("OTP Verified for ${widget.phoneNumber}");
+        Navigator.pushReplacementNamed(context, AppRoutes.createGroup);
+      }
     } else {
       ScaffoldMessenger.of(
         context,
@@ -82,7 +100,7 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1B5E20),
+        backgroundColor: zbGreen,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: _goBack,
@@ -182,7 +200,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             //Navigator.pushNamed(context, AppRoutes.createGroup),
                           },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1B5E20),
+                        backgroundColor: zbGreen,
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -228,9 +246,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       onPressed:
                           () => Navigator.pushNamed(context, AppRoutes.login),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                          color: const Color.fromARGB(255, 21, 87, 31),
-                        ),
+                        side: BorderSide(color: zbGreen),
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -239,7 +255,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       child: Text(
                         "Resend OTP",
                         style: TextStyle(
-                          color: const Color.fromARGB(255, 20, 101, 58),
+                          color: zbGreen,
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -253,7 +269,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         child: Text(
                           "Wrong phone number? Go back",
                           style: TextStyle(
-                            color: const Color(0xFF1B5E20),
+                            color: zbGreen,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
